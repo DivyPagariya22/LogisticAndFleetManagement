@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.logistic.logisticsandfleet.dto.MaintenanceLogDTO;
 import com.logistic.logisticsandfleet.dto.VehicleDTO;
 import com.logistic.logisticsandfleet.entity.MaintenanceLog;
+import com.logistic.logisticsandfleet.entity.Vehicle;
 import com.logistic.logisticsandfleet.service.VehicleService;
 
 import jakarta.validation.Valid;
@@ -78,6 +79,38 @@ public class VehicleController {
         } catch (Exception e) {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<Vehicle> searchVehicles(@RequestParam String registrationNumber) {
+        Vehicle vehicle = vehicleService.getByRegistration(registrationNumber);
+        return ResponseEntity.ok(vehicle);
+    }
+
+    @GetMapping("/status")
+    public ResponseEntity<String> getVehicleStatus(@RequestParam Long id) {
+        try {
+            String status = vehicleService.getVehicleStatus(id);
+            return ResponseEntity.ok(status);
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/maintenance/check")
+    public ResponseEntity<Boolean> checkMaintenance(@RequestParam Long id) {
+        try {
+            boolean maintenance = vehicleService.checkMaintenance(id);
+            return ResponseEntity.ok(maintenance);
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/maintenance/remaining")
+    public ResponseEntity<List<Vehicle>> getVehiclesDueForMaintenance() {
+        List<Vehicle> vehicles = vehicleService.getVehiclesDueForMaintenance();
+        return ResponseEntity.ok(vehicles);
     }
 
     @PostMapping("/maintenance")

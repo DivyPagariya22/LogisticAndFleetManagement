@@ -1,5 +1,6 @@
 package com.logistic.logisticsandfleet.service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -105,6 +106,42 @@ public class VehicleService {
             return maintenanceLog;
         } catch (Exception e) {
             throw new RuntimeException("Error fetching maintenance log: " + e.getMessage());
+        }
+    }
+
+    public String getVehicleStatus(Long id) {
+        try {
+            VehicleDTO vehicle = getVehicleById(id);
+            return vehicle.status();
+        } catch (Exception e) {
+            throw new RuntimeException("Error fetching vehicle status: " + e.getMessage());
+        }
+    }
+
+    public boolean checkMaintenance(Long id) {
+
+        Vehicle vehicle = vehicleRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Vehicle not found with id: " + id));
+
+        LocalDate lastMaintenance = vehicle.getLastMaintenanceDate();
+        if (lastMaintenance == null || lastMaintenance.isBefore(LocalDate.now().minusMonths(1))) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public List<Vehicle> getVehiclesDueForMaintenance() {
+        LocalDate upcomingDate = LocalDate.now().minusWeeks(4);
+        return vehicleRepository.findByLastMaintenanceDateBefore(upcomingDate);
+    }
+
+    public Vehicle getByRegistration(String query) {
+        try {
+            Vehicle vehicle = vehicleRepository.findByRegistrationNumberIgnoreCase(query);
+            return vehicle;
+        } catch (Exception e) {
+            throw new RuntimeException("Error fetching vehicles by registration: " + e.getMessage());
         }
     }
 }
