@@ -9,20 +9,13 @@ import lombok.Builder;
 @Builder
 public record UserDTO(
 
-        Long id,
+                Long id,
 
-        @NotBlank(message = "Name cannot be blank")
-        @Size(min = 2, max = 100, message = "Name must be between 2 and 100 characters")
-        String name,
+                @NotBlank(message = "Name cannot be blank") @Size(min = 2, max = 100, message = "Name must be between 2 and 100 characters") String name,
 
-        @NotBlank(message = "Email cannot be blank")
-        @Email(message = "Email should be valid")
-        String email,
+                @NotBlank(message = "Email cannot be blank") @Email(message = "Email should be valid") String email,
 
-        @NotBlank(message = "Password cannot be blank")
-        @Size(min = 6, message = "Password must be at least 6 characters long")
-        String password,
+                @NotBlank(message = "Password cannot be blank") @Size(min = 6, message = "Password must be at least 6 characters long") String password,
 
-        @NotNull(message = "Role cannot be null")
-        String role
-) {}
+                @NotNull(message = "Role cannot be null") String role) {
+}
