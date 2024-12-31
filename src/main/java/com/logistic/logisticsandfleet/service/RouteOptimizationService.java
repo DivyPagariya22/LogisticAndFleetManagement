@@ -25,6 +25,7 @@ public class RouteOptimizationService {
     private static class RouteInfo {
         double distance;
         double time;
+        @SuppressWarnings("unused")
         Route route;
 
         RouteInfo(Route route) {

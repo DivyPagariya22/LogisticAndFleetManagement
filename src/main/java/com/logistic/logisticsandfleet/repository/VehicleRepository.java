@@ -14,4 +14,6 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
     List<Vehicle> findByLastMaintenanceDateBefore(LocalDate lastMaintenanceDate);
 
     Vehicle findByRegistrationNumberIgnoreCase(String registrationNumber);
+
+    List<Vehicle> findByStatus(Vehicle.Status status);
 }
