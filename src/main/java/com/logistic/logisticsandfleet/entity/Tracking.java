@@ -16,7 +16,7 @@ public class Tracking {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "shipment_id", nullable = false)
     private Shipment shipment;
 
@@ -25,5 +25,10 @@ public class Tracking {
 
     @Column(nullable = false)
     private LocalDateTime timestamp;
+
+    public Tracking orElseThrow(Object object) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'orElseThrow'");
+    }
 
 }

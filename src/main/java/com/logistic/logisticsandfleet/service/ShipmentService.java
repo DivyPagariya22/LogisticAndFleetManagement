@@ -152,4 +152,70 @@ public class ShipmentService {
 
         return shipmentDTO;
     }
+
+    public String updateShipmentStatus(Long shipmentId, String currentCityName) {
+        // Fetch the shipment by ID
+        Shipment shipment = shipmentRepository.findById(shipmentId)
+                .orElseThrow(() -> new RuntimeException("Shipment not found with ID: " + shipmentId));
+
+        // Validate the provided city name
+        City currentCity = cityRepository.findByNameIgnoreCase(currentCityName);
+        if (currentCity == null) {
+            throw new RuntimeException("City not found with name: " + currentCityName);
+        }
+
+        // Update tracking
+        Tracking tracking;
+
+        if (trackingRepository.findByShipmentId(shipmentId) == null) {
+            tracking = new Tracking();
+            tracking.setShipment(shipment);
+            tracking.setLocation(currentCity.getName());
+            tracking.setTimestamp(LocalDateTime.now());
+            trackingRepository.save(tracking);
+        } else {
+            tracking = trackingRepository.findByShipmentId(shipmentId);
+            tracking.setLocation(currentCity.getName());
+            tracking.setTimestamp(LocalDateTime.now());
+            trackingRepository.save(tracking);
+        }
+
+        // Check if the current city is the destination city
+        if (currentCity.equals(shipment.getDestinationCity())) {
+            shipment.setStatus(ShipmentStatus.DELIVERED);
+
+            // Mark the vehicle as available
+            Vehicle vehicle = shipment.getVehicle();
+            vehicle.setStatus(Status.AVAILABLE);
+            vehicleRepository.save(vehicle);
+
+            shipmentRepository.save(shipment);
+            return "Shipment delivered successfully and status updated to DELIVERED.";
+        } else {
+            shipment.setStatus(ShipmentStatus.IN_TRANSIT);
+            shipmentRepository.save(shipment);
+            return "Shipment is still in transit. Location updated.";
+        }
+    }
+
+    public Tracking getTracking(String tracking_id) {
+        if (!tracking_id.startsWith("TRK")) {
+            throw new RuntimeException("Invalid tracking ID format");
+        }
+
+        Long shipmentId;
+        try {
+            shipmentId = Long.parseLong(tracking_id.substring(3));
+        } catch (NumberFormatException e) {
+            throw new RuntimeException("Invalid tracking ID format");
+        }
+
+        Tracking tracking = trackingRepository.findByShipmentId(shipmentId);
+
+        if (tracking == null) {
+            throw new RuntimeException("Tracking not found for shipment ID: " + shipmentId);
+        }
+
+        return tracking;
+    }
 }

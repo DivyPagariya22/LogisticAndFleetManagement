@@ -9,8 +9,10 @@ import com.logistic.logisticsandfleet.service.ShipmentService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
@@ -42,6 +44,11 @@ public class ShipmentController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
+    }
+
+    @PutMapping("/{id}/status")
+    public String updateShipmentStatus(@PathVariable Long id, @RequestParam String currentCityName) {
+        return shipmentService.updateShipmentStatus(id, currentCityName);
     }
 
 }
