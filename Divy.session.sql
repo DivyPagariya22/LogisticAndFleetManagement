@@ -1,1 +1,1 @@
-SELECT * from tracking
+SELECT * from shipments

@@ -33,8 +33,11 @@ public class User {
     private Role role;
 
     public enum Role {
-        ADMIN,
-        DRIVER,
-        CUSTOMER
+        ADMIN, DRIVER, CUSTOMER
+    }
+
+    public User orElseThrow(Object object) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'orElseThrow'");
     }
 }
